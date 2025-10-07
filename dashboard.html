@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Social Setu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #7c3aed;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --background: #ffffff;
+            --surface: #f9fafb;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--surface);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Top Navigation - Fixed */
+        .top-nav {
+            background: var(--background);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+            height: 60px;
+        }
+
+        .nav-container {
+            max-width: 100%;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .brand-logo {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        /* Main Layout - Fixed for proper alignment */
+        .dashboard-wrapper {
+            padding-top: 60px;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--background);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            left: 0;
+            top: 60px;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .new-post-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .new-post-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--background);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-change {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--error);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
+        }
+
+        /* Recent Posts */
+        .recent-posts {
+            background: var(--background);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .post-info {
+            flex: 1;
+        }
+
+        .post-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .post-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .post-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-published {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-scheduled {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        /* Create Post Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--background);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .platform-selector {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .platform-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Scheduled posts in sidebar */
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .scheduled-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .scheduled-item {
+            padding: 0.75rem;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .scheduled-time {
+            font-size: 0.875rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .scheduled-content {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-brand">
+                <span class="brand-logo">Social Setu</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link active">Dashboard</a></li>
+                <li><a href="content-creator.html" class="nav-link">Content</a></li>
+                <li><a href="schedule-manager.html" class="nav-link">Schedule</a></li>
+                <li><a href="analytics-insights.html" class="nav-link">Analytics</a></li>
+                <li><a href="trend-analysis.html" class="nav-link">Trends</a></li>
+                <li><a href="support-chat.html" class="nav-link">Support</a></li>
+                <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Dashboard -->
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- User Profile Section -->
+            <div class="sidebar-section" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; border-radius: 12px; margin-bottom: 1.5rem;">
+                <h3 class="sidebar-title" style="color: white; opacity: 0.9;">Profile</h3>
+                <div id="userProfile" style="padding: 0.5rem 0;">
+                    <div style="margin-bottom: 0.75rem;">
+                        <div style="font-size: 1.125rem; font-weight: 600;">TechStart Solutions</div>
+                        <div style="font-size: 0.875rem; opacity: 0.9;">Technology / SaaS</div>
+                    </div>
+                    <div style="font-size: 0.75rem; opacity: 0.85;">
+                        <div style="margin-bottom: 0.25rem;">📧 demo@techstart.com</div>
+                        <div style="margin-bottom: 0.25rem;">⭐ Premium Plan</div>
+                        <div>👥 4 Platforms Connected</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Upcoming Posts</h3>
+                <div class="scheduled-list" id="upcomingPosts">
+                    <div class="scheduled-item">
+                        <div class="scheduled-time">Today, 2:00 PM</div>
+                        <div class="scheduled-content">Product Launch - Instagram</div>
+                    </div>
+                    <div class="scheduled-item">
+                        <div class="scheduled-time">Tomorrow, 10:00 AM</div>
+                        <div class="scheduled-content">Weekly Tips - LinkedIn</div>
+                    </div>
+                    <div class="scheduled-item">
+                        <div class="scheduled-time">Dec 8, 6:00 PM</div>
+                        <div class="scheduled-content">Behind the Scenes - Facebook</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Quick Stats</h3>
+                <div class="scheduled-list" id="quickStats">
+                    <div class="scheduled-item">
+                        <div class="scheduled-content">Loading...</div>
+                        <div class="scheduled-time">--</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Dashboard</h1>
+                <button class="new-post-btn" onclick="showCreatePost()">+ New Post</button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card" data-stat="total-posts">
+                    <div class="stat-content">
+                        <div class="stat-label">Total Posts</div>
+                        <div class="stat-value">0</div>
+                        <div class="stat-change">Loading...</div>
+                    </div>
+                    <div class="stat-icon">📝</div>
+                </div>
+
+                <div class="stat-card" data-stat="engagement">
+                    <div class="stat-content">
+                        <div class="stat-label">Engagement</div>
+                        <div class="stat-value">0</div>
+                        <div class="stat-change">Loading...</div>
+                    </div>
+                    <div class="stat-icon">💬</div>
+                </div>
+
+                <div class="stat-card" data-stat="scheduled">
+                    <div class="stat-content">
+                        <div class="stat-label">Scheduled</div>
+                        <div class="stat-value">0</div>
+                        <div class="stat-change">Loading...</div>
+                    </div>
+                    <div class="stat-icon">📅</div>
+                </div>
+
+                <div class="stat-card" data-stat="total-reach">
+                    <div class="stat-content">
+                        <div class="stat-label">Total Reach</div>
+                        <div class="stat-value">0</div>
+                        <div class="stat-change">Loading...</div>
+                    </div>
+                    <div class="stat-icon">📊</div>
+                </div>
+            </div>
+
+            <!-- Recent Posts -->
+            <div class="recent-posts">
+                <h2 class="section-title">Recent Posts</h2>
+                <div class="post-list">
+                    <div class="post-item">
+                        <div class="post-info">
+                            <div class="post-title">New Product Launch Announcement</div>
+                            <div class="post-meta">Facebook • 2 hours ago</div>
+                        </div>
+                        <span class="post-status status-published">Published</span>
+                    </div>
+
+                    <div class="post-item">
+                        <div class="post-info">
+                            <div class="post-title">Weekly Tips Thread</div>
+                            <div class="post-meta">Twitter • Scheduled for tomorrow</div>
+                        </div>
+                        <span class="post-status status-scheduled">Scheduled</span>
+                    </div>
+
+                    <div class="post-item">
+                        <div class="post-info">
+                            <div class="post-title">Behind the Scenes Video</div>
+                            <div class="post-meta">Instagram • 1 day ago</div>
+                        </div>
+                        <span class="post-status status-published">Published</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div class="modal" id="createPostModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Create New Post</h2>
+                <button class="close-btn" onclick="hideCreatePost()">×</button>
+            </div>
+
+            <form id="createPostForm">
+                <div class="form-group">
+                    <label class="form-label">Post Content</label>
+                    <textarea class="form-textarea" id="postContent" placeholder="What's on your mind?" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Select Platforms</label>
+                    <div class="platform-selector">
+                        <label class="platform-option">
+                            <input type="checkbox" name="platform" value="facebook">
+                            <span>Facebook</span>
+                        </label>
+                        <label class="platform-option">
+                            <input type="checkbox" name="platform" value="twitter">
+                            <span>Twitter</span>
+                        </label>
+                        <label class="platform-option">
+                            <input type="checkbox" name="platform" value="instagram">
+                            <span>Instagram</span>
+                        </label>
+                        <label class="platform-option">
+                            <input type="checkbox" name="platform" value="linkedin">
+                            <span>LinkedIn</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Schedule Post</label>
+                    <input type="datetime-local" class="form-input" id="scheduleTime">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="hideCreatePost()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Load Dashboard Scripts -->
+    <script src="js/demo-auth.js"></script>
+    <script src="js/dashboard-loader.js"></script>
+    
+    <script>
+        // Modal functions
+        function showCreatePost() {
+            document.getElementById('createPostModal').classList.add('active');
+        }
+
+        function hideCreatePost() {
+            document.getElementById('createPostModal').classList.remove('active');
+        }
+
+        // Form submission
+        document.getElementById('createPostForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const content = document.getElementById('postContent').value;
+            const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(cb => cb.value);
+            const scheduleTime = document.getElementById('scheduleTime').value;
+            
+            // Store in localStorage
+            const posts = JSON.parse(localStorage.getItem('socialSetuPosts') || '[]');
+            const newPost = {
+                id: Date.now(),
+                content,
+                platforms,
+                scheduleTime,
+                status: scheduleTime ? 'scheduled' : 'draft',
+                createdAt: new Date().toISOString()
+            };
+            
+            posts.push(newPost);
+            localStorage.setItem('socialSetuPosts', JSON.stringify(posts));
+            
+            // Update UI
+            updateUpcomingPosts();
+            hideCreatePost();
+            
+            // Reset form
+            document.getElementById('createPostForm').reset();
+            
+            alert('Post created successfully!');
+        });
+
+        // Update upcoming posts
+        function updateUpcomingPosts() {
+            const posts = JSON.parse(localStorage.getItem('socialSetuPosts') || '[]');
+            const scheduled = posts.filter(p => p.status === 'scheduled').slice(0, 3);
+            const container = document.getElementById('upcomingPosts');
+            
+            if (scheduled.length > 0) {
+                container.innerHTML = scheduled.map(post => `
+                    <div class="scheduled-item">
+                        <div class="scheduled-time">${new Date(post.scheduleTime).toLocaleString()}</div>
+                        <div class="scheduled-content">${post.content.substring(0, 30)}... - ${post.platforms.join(', ')}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear demo data if it's a demo user
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                if (currentUser.isDemo) {
+                    clearDemoData();
+                }
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Load posts on page load
+        updateUpcomingPosts();
+    </script>
+</body>
+</html>

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Chat - Social Setu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #7c3aed;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --background: #ffffff; 
+            --surface: #f9fafb;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--surface);
+            color: var(--text-primary);
+            line-height: 1.6;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: var(--background);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .brand-logo {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        /* Main Container */
+        .support-container {
+            display: flex;
+            height: calc(100vh - 73px);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: var(--background);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 2.5rem 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--surface);
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        /* FAQ Categories */
+        .faq-categories {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .category-item {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .category-item:hover {
+            background: var(--surface);
+            border-color: var(--border);
+        }
+
+        .category-item.active {
+            background: rgba(79, 70, 229, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .category-icon {
+            display: inline-block;
+            width: 20px;
+            margin-right: 0.5rem;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--background);
+        }
+
+        .chat-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--background);
+        }
+
+        .chat-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        /* Messages */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            background: linear-gradient(120deg, rgba(79, 70, 229, 0.06), rgba(124, 58, 237, 0.06));
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .bot-avatar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .user-avatar {
+            background: var(--surface);
+            border: 2px solid var(--border);
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-sender {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .message-text {
+            background: var(--background);
+            padding: 1rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .message.user .message-text {
+            background: rgba(79, 70, 229, 0.05);
+            border-color: rgba(79, 70, 229, 0.2);
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .quick-action-btn {
+            padding: 0.375rem 0.75rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 1.5rem;
+            background: var(--background);
+            border-top: 1px solid var(--border);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            resize: none;
+            transition: all 0.2s;
+            background: var(--surface);
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--background);
+        }
+
+        .send-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 2rem;
+            display: none;
+        }
+
+        .faq-section.active {
+            display: block;
+        }
+
+        .faq-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .faq-item {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .faq-question {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-brand">
+                <span class="brand-logo">Social Setu</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="content-creator.html" class="nav-link">Content</a></li>
+                <li><a href="schedule-manager.html" class="nav-link">Schedule</a></li>
+                <li><a href="analytics-insights.html" class="nav-link">Analytics</a></li>
+                <li><a href="trend-analysis.html" class="nav-link">Trends</a></li>
+                <li><a href="support-chat.html" class="nav-link active">Support</a></li>
+                <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="support-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Help Topics</h2>
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search help...">
+                    <span class="search-icon">🔍</span>
+                </div>
+            </div>
+            
+            <div class="faq-categories">
+                <div class="category-item active">
+                    <span class="category-icon">💬</span>
+                    <span>Live Chat</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-icon">🚀</span>
+                    <span>Getting Started</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-icon">📅</span>
+                    <span>Scheduling</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-icon">🤖</span>
+                    <span>AI Features</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-icon">📊</span>
+                    <span>Analytics</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-icon">💳</span>
+                    <span>Billing</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-icon">🔧</span>
+                    <span>Technical Issues</span>
+                </div>
+                <div class="category-item">
+                    <span class="category-icon">📚</span>
+                    <span>Documentation</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <h1 class="chat-title">AI Support Assistant</h1>
+                <div class="chat-status">
+                    <span class="status-dot"></span>
+                    <span>Online - Ready to help</span>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+                <!-- Welcome Message -->
+                <div class="message">
+                    <div class="message-avatar bot-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-sender">AI Assistant</div>
+                        <div class="message-text">
+                            Hello! I'm your AI Support Assistant. I'm here to help you with any questions about Social Setu. How can I assist you today?
+                        </div>
+                        <div class="quick-actions">
+                            <button class="quick-action-btn" onclick="sendQuickMessage('How do I schedule a post?')">📅 Schedule Posts</button>
+                            <button class="quick-action-btn" onclick="sendQuickMessage('How does AI content generation work?')">🤖 AI Features</button>
+                            <button class="quick-action-btn" onclick="sendQuickMessage('How do I view analytics?')">📊 Analytics</button>
+                            <button class="quick-action-btn" onclick="sendQuickMessage('What are the pricing plans?')">💳 Pricing</button>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="message typing-indicator" id="typingIndicator">
+                    <div class="message-avatar bot-avatar">🤖</div>
+                    <div class="message-content">
+                        <div style="display: flex; gap: 0.25rem;">
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                            <span class="typing-dot"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section (hidden by default) -->
+            <div class="faq-section" id="faqSection">
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question">How do I connect my social media accounts?</div>
+                        <div class="faq-answer">Go to Settings > Connected Accounts and click on the platform you want to connect. Follow the authorization process.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Can I schedule posts for multiple platforms at once?</div>
+                        <div class="faq-answer">Yes! When creating a post, you can select multiple platforms and the content will be optimized for each one.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">How does the AI content generation work?</div>
+                        <div class="faq-answer">Our AI uses advanced language models to generate engaging content based on your industry, audience, and preferences.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">What's included in the free plan?</div>
+                        <div class="faq-answer">The free plan includes 30 scheduled posts per month, basic analytics, and AI content generation for up to 10 posts.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-container">
+                    <input type="text" class="message-input" id="messageInput" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
+                    <button class="send-btn" onclick="sendMessage()">
+                        <span>Send</span>
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/gemini.js"></script>
+    <script>
+        // Use the global GeminiAI instance if available to avoid duplicate declarations
+        const chatAI = window.geminiAI || new GeminiAI();
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const typingIndicator = document.getElementById('typingIndicator');
+        
+        // Conversation history for context
+        const conversationHistory = [];
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            messageInput.value = '';
+            
+            // Show typing indicator
+            typingIndicator.classList.add('active');
+            scrollToBottom();
+            
+            try {
+                // Get AI response
+                const response = await chatAI.chatWithAssistant(message, conversationHistory);
+                
+                // Hide typing indicator
+                typingIndicator.classList.remove('active');
+                
+                // Add bot response
+                addMessage(response, 'bot');
+                
+                // Update conversation history
+                conversationHistory.push(
+                    { role: 'user', content: message },
+                    { role: 'assistant', content: response }
+                );
+                
+                // Keep only last 10 messages for context
+                if (conversationHistory.length > 20) {
+                    conversationHistory.splice(0, 2);
+                }
+            } catch (error) {
+                typingIndicator.classList.remove('active');
+                addMessage('I apologize, but I encountered an error. Please try again or contact support.', 'bot');
+                console.error('Chat error:', error);
+            }
+        }
+
+        function sendQuickMessage(message) {
+            messageInput.value = message;
+            sendMessage();
+        }
+
+        // Sanitize and format chat text to remove markdown bullets/stars and unsafe HTML
+        function escapeHTML(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+        function stripMarkdown(str) {
+            let s = str;
+            // Remove bold/italic markers
+            s = s.replace(/\*\*|__|\*|_/g, '');
+            // Remove leading list markers (bullets and numbered lists)
+            s = s.replace(/^\s*([\-*•]| )\u0000?\s+/gm, '');
+            s = s.replace(/^\s*\d+\.\s+/gm, '');
+            // Remove headings
+            s = s.replace(/^\s*#{1,6}\s+/gm, '');
+            // Convert [text](url) to text
+            s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
+            return s;
+        }
+        function sanitizeToHTML(str) {
+            const plain = stripMarkdown(str);
+            const safe = escapeHTML(plain);
+            return safe.replace(/\n/g, '<br>');
+        }
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar ${sender === 'bot' ? 'bot-avatar' : 'user-avatar'}">
+                    ${sender === 'bot' ? '🤖' : '👤'}
+                </div>
+                <div class="message-content">
+                    <div class="message-sender">${sender === 'bot' ? 'AI Assistant' : 'You'}</div>
+                    <div class="message-text">${sanitizeToHTML(text)}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+            
+            // Insert before typing indicator
+            messagesContainer.insertBefore(messageDiv, typingIndicator);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear demo data if it's a demo user
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                if (currentUser.isDemo && typeof clearDemoData === 'function') {
+                    clearDemoData();
+                }
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Category selection
+        document.querySelectorAll('.category-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.category-item').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                const category = this.textContent.trim();
+                if (category === 'Live Chat') {
+                    document.getElementById('faqSection').classList.remove('active');
+                    messagesContainer.style.display = 'block';
+                } else {
+                    // For other categories, you could show FAQ or send a related message
+                    sendQuickMessage(`Tell me more about ${category}`);
+                }
+            });
+        });
+
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    sendQuickMessage(`Search: ${query}`);
+                    this.value = '';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

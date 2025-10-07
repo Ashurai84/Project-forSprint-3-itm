@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Manager - Social Setu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #7c3aed;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --background: #ffffff;
+            --surface: #f9fafb;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--surface);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .top-nav {
+            background: var(--background);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .brand-logo {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1rem;
+        }
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+        .nav-link.active {
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.1);
+        }
+        .schedule-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        .calendar-container {
+            background: var(--background);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .month-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .calendar-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .day-header {
+            background: var(--surface);
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        .calendar-day {
+            background: var(--background);
+            min-height: 100px;
+            padding: 0.5rem;
+            position: relative;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .calendar-day:hover {
+            background: var(--surface);
+        }
+        .day-number {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        .calendar-day.today .day-number {
+            color: var(--primary);
+        }
+        .post-indicator {
+            background: var(--primary);
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+        }
+        .btn-primary {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-brand">
+                <span class="brand-logo">Social Setu</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="content-creator.html" class="nav-link">Content</a></li>
+                <li><a href="schedule-manager.html" class="nav-link active">Schedule</a></li>
+                <li><a href="analytics-insights.html" class="nav-link">Analytics</a></li>
+                <li><a href="trend-analysis.html" class="nav-link">Trends</a></li>
+                <li><a href="support-chat.html" class="nav-link">Support</a></li>
+                <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="schedule-container">
+        <div class="page-header">
+            <h1 class="page-title">Schedule Manager</h1>
+            <p class="page-subtitle">Plan and organize your social media posts</p>
+        </div>
+
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <h2 class="month-title" id="monthTitle"></h2>
+                <div class="calendar-nav">
+                    <button class="nav-btn" id="prevBtn">← Previous</button>
+                    <button class="nav-btn" id="todayBtn">Today</button>
+                    <button class="nav-btn" id="nextBtn">Next →</button>
+                </div>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid">
+                <div class="day-header">Sun</div>
+                <div class="day-header">Mon</div>
+                <div class="day-header">Tue</div>
+                <div class="day-header">Wed</div>
+                <div class="day-header">Thu</div>
+                <div class="day-header">Fri</div>
+                <div class="day-header">Sat</div>
+                <div id="calendarDays"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Interactive Calendar Rendering
+        (function() {
+            const monthTitle = document.getElementById('monthTitle');
+            const calendarGrid = document.getElementById('calendarGrid');
+            const calendarDaysContainer = document.getElementById('calendarDays');
+
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+            let viewDate = new Date();
+            viewDate.setDate(1);
+
+            function getScheduledPostsByDate() {
+                const posts = JSON.parse(localStorage.getItem('socialSetuPosts') || '[]');
+                const scheduled = posts.filter(p => p.status === 'scheduled' && p.scheduleTime);
+                const map = new Map(); // key: yyyy-mm-dd -> array of posts
+                scheduled.forEach(p => {
+                    const d = new Date(p.scheduleTime);
+                    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+                    if (!map.has(key)) map.set(key, []);
+                    map.get(key).push(p);
+                });
+                return map;
+            }
+
+            function clearDays() {
+                // Remove previous day cells
+                const existing = Array.from(calendarGrid.querySelectorAll('.calendar-day'));
+                existing.forEach(el => el.remove());
+            }
+
+            function renderCalendar() {
+                clearDays();
+
+                const year = viewDate.getFullYear();
+                const month = viewDate.getMonth();
+
+                monthTitle.textContent = `${monthNames[month]} ${year}`;
+
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const today = new Date();
+                const postMap = getScheduledPostsByDate();
+
+                // Leading empty cells
+                for (let i = 0; i < firstDay; i++) {
+                    const empty = document.createElement('div');
+                    empty.className = 'calendar-day';
+                    calendarGrid.appendChild(empty);
+                }
+
+                // Month days
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'calendar-day';
+
+                    if (
+                        today.getFullYear() === year &&
+                        today.getMonth() === month &&
+                        today.getDate() === day
+                    ) {
+                        cell.classList.add('today');
+                    }
+
+                    const key = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                    const posts = postMap.get(key) || [];
+
+                    cell.innerHTML = `
+                        <div class="day-number">${day}</div>
+                        ${posts.length > 0 ? `<div class="post-indicator">${posts.length} post${posts.length>1?'s':''}</div>` : ''}
+                    `;
+
+                    // Optional: click to view details
+                    if (posts.length > 0) {
+                        cell.style.cursor = 'pointer';
+                        cell.title = posts.map(p => `${new Date(p.scheduleTime).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})} • ${Array.isArray(p.platforms)?p.platforms.join(', '):''} • ${p.content.substring(0,50)}${p.content.length>50?'...':''}`).join('\n');
+                        cell.addEventListener('click', () => {
+                            alert(`Scheduled on ${new Date(year, month, day).toDateString()}\n\n` + posts.map((p,i)=>`${i+1}. ${new Date(p.scheduleTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})} • ${Array.isArray(p.platforms)?p.platforms.join(', '):''}\n${p.content}`).join('\n\n'));
+                        });
+                    }
+
+                    calendarGrid.appendChild(cell);
+                }
+            }
+
+            // Navigation
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                viewDate.setMonth(viewDate.getMonth() - 1);
+                renderCalendar();
+            });
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                viewDate.setMonth(viewDate.getMonth() + 1);
+                renderCalendar();
+            });
+            document.getElementById('todayBtn').addEventListener('click', () => {
+                viewDate = new Date();
+                viewDate.setDate(1);
+                renderCalendar();
+            });
+
+            // Initial render
+            renderCalendar();
+        })();
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

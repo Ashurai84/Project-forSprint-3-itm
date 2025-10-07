@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - Scheduler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #3B82F6;
+            --secondary-color: #8B5CF6;
+            --accent-color: #10B981;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --text-light: #9CA3AF;
+            --background: #F9FAFB;
+            --surface: #FFFFFF;
+            --border: #E5E7EB;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--background);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+        }
+
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .page-title p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-card {
+            background: var(--surface);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            padding: 2rem;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .pricing-card.popular {
+            border-color: var(--primary-color);
+            position: relative;
+        }
+
+        .pricing-card.popular::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .currency {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .period {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            flex: 1;
+        }
+
+        .plan-features li {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-icon {
+            color: var(--accent-color);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background: var(--background);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .info-section {
+            background: var(--surface);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .info-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .info-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .faq-grid {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .faq-item {
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .faq-question {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-title h1 {
+                font-size: 2rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Scheduler</div>
+            <nav class="nav-links">
+                <a href="login.html" class="nav-link">Login</a>
+                <a href="index.html" class="nav-link">Home</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h1>Choose Your Plan</h1>
+            <p>Affordable pricing designed specifically for Indian small businesses and startups</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3 class="plan-name">Starter</h3>
+                <p class="plan-description">Perfect for individuals and small teams getting started</p>
+                <div class="plan-price">
+                    <span class="currency">₹</span>
+                    <span class="price">299</span>
+                    <span class="period">/month</span>
+                </div>
+                <ul class="plan-features">
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Up to 10 scheduled posts</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>3 social media accounts</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Basic analytics dashboard</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Email support</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Content calendar</span>
+                    </li>
+                </ul>
+                <button class="btn btn-outline" onclick="selectPlan('starter')">Get Started</button>
+            </div>
+
+            <div class="pricing-card popular">
+                <h3 class="plan-name">Professional</h3>
+                <p class="plan-description">Best for growing businesses with multiple accounts</p>
+                <div class="plan-price">
+                    <span class="currency">₹</span>
+                    <span class="price">799</span>
+                    <span class="period">/month</span>
+                </div>
+                <ul class="plan-features">
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Up to 50 scheduled posts</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>10 social media accounts</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Advanced analytics & insights</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Priority email support</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>AI-powered best time to post</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Team collaboration (2 users)</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Content approval workflow</span>
+                    </li>
+                </ul>
+                <button class="btn btn-primary" onclick="selectPlan('professional')">Get Started</button>
+            </div>
+
+            <div class="pricing-card">
+                <h3 class="plan-name">Business</h3>
+                <p class="plan-description">For agencies and enterprises with advanced needs</p>
+                <div class="plan-price">
+                    <span class="currency">₹</span>
+                    <span class="price">1,999</span>
+                    <span class="period">/month</span>
+                </div>
+                <ul class="plan-features">
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Unlimited scheduled posts</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Unlimited social accounts</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Enterprise analytics & reporting</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>24/7 priority support</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>AI-powered content suggestions</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Unlimited team members</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Advanced approval workflows</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>Custom branding</span>
+                    </li>
+                    <li>
+                        <span class="feature-icon">✓</span>
+                        <span>API access</span>
+                    </li>
+                </ul>
+                <button class="btn btn-outline" onclick="selectPlan('business')">Get Started</button>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>Why Choose Scheduler?</h2>
+            <p>Scheduler is built specifically for Indian businesses, understanding your unique needs and challenges. We offer affordable, transparent pricing with no hidden fees.</p>
+            <p>All plans include a 14-day free trial with no credit card required. You can upgrade, downgrade, or cancel anytime.</p>
+
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">Do I need a credit card for the free trial?</div>
+                    <div class="faq-answer">No! Start your 14-day free trial without providing any payment information. You'll only be charged when you decide to continue after the trial.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can I change my plan later?</div>
+                    <div class="faq-answer">Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What payment methods do you accept?</div>
+                    <div class="faq-answer">We accept all major credit/debit cards, UPI, net banking, and popular Indian wallets. Payment integration coming soon!</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Is my data secure?</div>
+                    <div class="faq-answer">Absolutely! We use Firebase for secure data storage with enterprise-grade encryption. Your data is protected and backed up regularly.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBigpJFwHozNSwlIstZxwuWm_JbRQImmEY",
+            authDomain: "itmskilsuni.firebaseapp.com",
+            databaseURL: "https://itmskilsuni-default-rtdb.firebaseio.com",
+            projectId: "itmskilsuni",
+            storageBucket: "itmskilsuni.firebasestorage.app",
+            messagingSenderId: "164897587765",
+            appId: "1:164897587765:web:e0beb8c5dbbbbb4c00a77c",
+            measurementId: "G-K0M0YVW124"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Check authentication state and update navigation accordingly
+        onAuthStateChanged(auth, (user) => {
+            const dashboardLink = document.querySelector('nav .nav-link[href="login.html"]');
+            if (user && dashboardLink) {
+                dashboardLink.href = 'dashboard.html';
+                dashboardLink.textContent = 'Dashboard';
+            }
+        });
+
+        window.selectPlan = function(plan) {
+            alert(`You selected the ${plan} plan. Payment integration coming soon! This is a demo page.`);
+            console.log('Selected plan:', plan);
+        };
+    </script>
+</body>
+</html>

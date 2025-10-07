@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Social Setu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .signup-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 40px;
+            width: 100%;
+            max-width: 800px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .logo p {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+            gap: 24px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #9CA3AF;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .step.active {
+            color: #3B82F6;
+        }
+
+        .step.completed {
+            color: #10B981;
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #E5E7EB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-circle {
+            border-color: #3B82F6;
+            background: #3B82F6;
+            color: white;
+        }
+
+        .step.completed .step-circle {
+            border-color: #10B981;
+            background: #10B981;
+            color: white;
+        }
+
+        /* Form Steps */
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            background: #FAFAFA;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Platform Selection */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .platform-option {
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .platform-option:hover {
+            border-color: #3B82F6;
+            background: #F0F9FF;
+        }
+
+        .platform-option.selected {
+            border-color: #3B82F6;
+            background: #3B82F6;
+            color: white;
+        }
+
+        .platform-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .platform-name {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        .btn-secondary:hover {
+            background: #E5E7EB;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Demo Login Link */
+        .demo-link {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .demo-link p {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        .demo-link a {
+            color: #3B82F6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .demo-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #EF4444;
+            font-size: 14px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        @media (max-width: 640px) {
+            .signup-container {
+                padding: 24px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-steps {
+                gap: 12px;
+            }
+
+            .step span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="logo">
+            <h1>Social Setu</h1>
+            <p>Create your account and start scheduling smarter</p>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+            <div class="step active" id="step1">
+                <div class="step-circle">1</div>
+                <span>Personal Info</span>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-circle">2</div>
+                <span>Business Details</span>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-circle">3</div>
+                <span>Social Platforms</span>
+            </div>
+        </div>
+
+        <form id="signupForm">
+            <!-- Step 1: Personal Information -->
+            <div class="form-step active" id="formStep1">
+                <h2 class="step-title">Personal Information</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" required>
+                    <span class="error-message" id="emailError"></span>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" required minlength="6">
+                        <span class="error-message" id="passwordError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password *</label>
+                        <input type="password" id="confirmPassword" required>
+                        <span class="error-message" id="confirmPasswordError"></span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <div></div>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(1)">
+                        Next <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Business Details -->
+            <div class="form-step" id="formStep2">
+                <h2 class="step-title">Business Details</h2>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="brandName">Brand/Company Name *</label>
+                        <input type="text" id="brandName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="industry">Industry *</label>
+                        <select id="industry" required>
+                            <option value="">Select Industry</option>
+                            <option value="technology">Technology / SaaS</option>
+                            <option value="ecommerce">E-commerce</option>
+                            <option value="fashion">Fashion & Beauty</option>
+                            <option value="food">Food & Beverage</option>
+                            <option value="health">Health & Wellness</option>
+                            <option value="education">Education</option>
+                            <option value="finance">Finance & Banking</option>
+                            <option value="realestate">Real Estate</option>
+                            <option value="entertainment">Entertainment & Media</option>
+                            <option value="nonprofit">Non-Profit</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="teamSize">Team Size</label>
+                        <select id="teamSize">
+                            <option value="solo">Just me</option>
+                            <option value="small">2-5 people</option>
+                            <option value="medium">6-20 people</option>
+                            <option value="large">21-50 people</option>
+                            <option value="enterprise">50+ people</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="postingFrequency">Desired Posting Frequency</label>
+                        <select id="postingFrequency">
+                            <option value="daily">Daily</option>
+                            <option value="few-weekly">Few times a week</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="biweekly">Bi-weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="targetAudience">Target Audience (Optional)</label>
+                    <textarea id="targetAudience" placeholder="Describe your target audience..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="previousStep(2)">
+                        <span>←</span> Back
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(2)">
+                        Next <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Social Platforms -->
+            <div class="form-step" id="formStep3">
+                <h2 class="step-title">Select Your Social Platforms</h2>
+                
+                <p style="text-align: center; color: #6B7280; margin-bottom: 24px;">
+                    Choose the platforms you want to manage with Social Setu
+                </p>
+
+                <div class="platform-grid">
+                    <div class="platform-option" data-platform="facebook">
+                        <div class="platform-icon">📘</div>
+                        <div class="platform-name">Facebook</div>
+                    </div>
+                    <div class="platform-option" data-platform="instagram">
+                        <div class="platform-icon">📷</div>
+                        <div class="platform-name">Instagram</div>
+                    </div>
+                    <div class="platform-option" data-platform="twitter">
+                        <div class="platform-icon">🐦</div>
+                        <div class="platform-name">Twitter</div>
+                    </div>
+                    <div class="platform-option" data-platform="linkedin">
+                        <div class="platform-icon">💼</div>
+                        <div class="platform-name">LinkedIn</div>
+                    </div>
+                    <div class="platform-option" data-platform="youtube">
+                        <div class="platform-icon">📺</div>
+                        <div class="platform-name">YouTube</div>
+                    </div>
+                    <div class="platform-option" data-platform="pinterest">
+                        <div class="platform-icon">📌</div>
+                        <div class="platform-name">Pinterest</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="terms" required>
+                        I agree to the Terms of Service and Privacy Policy
+                    </label>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="previousStep(3)">
+                        <span>←</span> Back
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        Create Account
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="demo-link">
+            <p>Want to explore first? <a href="login.html">Try demo login</a> (abc@gmail.com / abc123)</p>
+            <p style="margin-top: 8px;">Already have an account? <a href="login.html">Sign in</a></p>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const selectedPlatforms = new Set();
+
+        // Platform selection
+        document.querySelectorAll('.platform-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const platform = this.dataset.platform;
+                if (selectedPlatforms.has(platform)) {
+                    selectedPlatforms.delete(platform);
+                    this.classList.remove('selected');
+                } else {
+                    selectedPlatforms.add(platform);
+                    this.classList.add('selected');
+                }
+            });
+        });
+
+        function nextStep(step) {
+            if (validateStep(step)) {
+                document.getElementById(`formStep${step}`).classList.remove('active');
+                document.getElementById(`step${step}`).classList.remove('active');
+                document.getElementById(`step${step}`).classList.add('completed');
+                
+                currentStep = step + 1;
+                document.getElementById(`formStep${currentStep}`).classList.add('active');
+                document.getElementById(`step${currentStep}`).classList.add('active');
+            }
+        }
+
+        function previousStep(step) {
+            document.getElementById(`formStep${step}`).classList.remove('active');
+            document.getElementById(`step${step}`).classList.remove('active');
+            
+            currentStep = step - 1;
+            document.getElementById(`formStep${currentStep}`).classList.add('active');
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            document.getElementById(`step${currentStep}`).classList.remove('completed');
+        }
+
+        function validateStep(step) {
+            let isValid = true;
+
+            if (step === 1) {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                // Email validation
+                if (!email || !email.includes('@')) {
+                    document.getElementById('emailError').textContent = 'Please enter a valid email';
+                    document.getElementById('emailError').classList.add('active');
+                    isValid = false;
+                } else {
+                    document.getElementById('emailError').classList.remove('active');
+                }
+
+                // Password validation
+                if (password.length < 6) {
+                    document.getElementById('passwordError').textContent = 'Password must be at least 6 characters';
+                    document.getElementById('passwordError').classList.add('active');
+                    isValid = false;
+                } else {
+                    document.getElementById('passwordError').classList.remove('active');
+                }
+
+                // Confirm password validation
+                if (password !== confirmPassword) {
+                    document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+                    document.getElementById('confirmPasswordError').classList.add('active');
+                    isValid = false;
+                } else {
+                    document.getElementById('confirmPasswordError').classList.remove('active');
+                }
+            }
+
+            if (step === 2) {
+                const brandName = document.getElementById('brandName').value;
+                const industry = document.getElementById('industry').value;
+
+                if (!brandName || !industry) {
+                    alert('Please fill in all required fields');
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (selectedPlatforms.size === 0) {
+                alert('Please select at least one social platform');
+                return;
+            }
+
+            if (!document.getElementById('terms').checked) {
+                alert('Please accept the terms and conditions');
+                return;
+            }
+
+            // Collect all form data
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                brandName: document.getElementById('brandName').value,
+                industry: document.getElementById('industry').value,
+                teamSize: document.getElementById('teamSize').value,
+                postingFrequency: document.getElementById('postingFrequency').value,
+                targetAudience: document.getElementById('targetAudience').value,
+                platforms: Array.from(selectedPlatforms)
+            };
+
+            // Store in localStorage (for demo purposes)
+            const userData = {
+                name: `${formData.firstName} ${formData.lastName}`,
+                email: formData.email,
+                company: formData.brandName,
+                brandName: formData.brandName,
+                industry: formData.industry,
+                businessType: formData.industry,
+                teamSize: formData.teamSize,
+                targetAudience: formData.targetAudience,
+                socialPlatforms: {},
+                postingFrequency: formData.postingFrequency,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                joinDate: new Date().toISOString(),
+                plan: 'Free Trial',
+                isDemo: false
+            };
+
+            // Set platform connections
+            formData.platforms.forEach(platform => {
+                userData.socialPlatforms[platform] = {
+                    connected: true,
+                    handle: '',
+                    followers: 0
+                };
+            });
+
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            localStorage.setItem('isLoggedIn', 'true');
+
+            alert('Account created successfully! Redirecting to dashboard...');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

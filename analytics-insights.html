@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Insights - Social Setu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #7c3aed;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --background: #ffffff;
+            --surface: #f9fafb;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--surface);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: var(--background);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .brand-logo {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        /* Main Container */
+        .analytics-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Date Filter */
+        .date-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--background);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .metric-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .metric-change.positive {
+            color: var(--success);
+        }
+
+        .metric-change.negative {
+            color: var(--error);
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-card {
+            background: var(--background);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Platform Stats */
+        .platform-stats {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .platform-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .platform-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .platform-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .platform-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .platform-value {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Top Posts Section */
+        .posts-section {
+            background: var(--background);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .posts-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .posts-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .post-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .post-content {
+            flex: 1;
+        }
+
+        .post-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .post-platform {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Export Button */
+        .export-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Loading State */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-brand">
+                <span class="brand-logo">Social Setu</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="content-creator.html" class="nav-link">Content</a></li>
+                <li><a href="schedule-manager.html" class="nav-link">Schedule</a></li>
+                <li><a href="analytics-insights.html" class="nav-link active">Analytics</a></li>
+                <li><a href="trend-analysis.html" class="nav-link">Trends</a></li>
+                <li><a href="support-chat.html" class="nav-link">Support</a></li>
+                <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="analytics-container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1 class="page-title">Analytics Insights</h1>
+            <p class="page-subtitle">Track your social media performance across all platforms</p>
+        </div>
+
+        <!-- Date Filter -->
+        <div class="date-filter">
+            <button class="filter-btn">Today</button>
+            <button class="filter-btn active">Last 7 Days</button>
+            <button class="filter-btn">Last 30 Days</button>
+            <button class="filter-btn">Last 3 Months</button>
+            <button class="filter-btn">Custom Range</button>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-title">Total Reach</span>
+                    <div class="metric-icon">📊</div>
+                </div>
+                <div class="metric-value">245.8K</div>
+                <div class="metric-change positive">
+                    <span>↑</span>
+                    <span>12.5%</span>
+                    <span>vs last period</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-title">Engagement Rate</span>
+                    <div class="metric-icon">💬</div>
+                </div>
+                <div class="metric-value">4.8%</div>
+                <div class="metric-change positive">
+                    <span>↑</span>
+                    <span>0.6%</span>
+                    <span>vs last period</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-title">Total Posts</span>
+                    <div class="metric-icon">📝</div>
+                </div>
+                <div class="metric-value">142</div>
+                <div class="metric-change positive">
+                    <span>↑</span>
+                    <span>18</span>
+                    <span>new this week</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-title">Followers Growth</span>
+                    <div class="metric-icon">👥</div>
+                </div>
+                <div class="metric-value">+3,247</div>
+                <div class="metric-change positive">
+                    <span>↑</span>
+                    <span>23.1%</span>
+                    <span>vs last period</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <!-- Main Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">Engagement Overview</h2>
+                    <select class="filter-btn">
+                        <option>All Platforms</option>
+                        <option>Instagram</option>
+                        <option>Twitter</option>
+                        <option>LinkedIn</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="engagementChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Platform Stats -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h2 class="chart-title">Platform Performance</h2>
+                </div>
+                <div class="platform-stats">
+                    <div class="platform-item">
+                        <div class="platform-info">
+                            <div class="platform-icon" style="background: linear-gradient(45deg, #833AB4, #FD1D1D, #FCB045);">📷</div>
+                            <span class="platform-name">Instagram</span>
+                        </div>
+                        <span class="platform-value">68.2K</span>
+                    </div>
+                    <div class="platform-item">
+                        <div class="platform-info">
+                            <div class="platform-icon" style="background: #1DA1F2;">🐦</div>
+                            <span class="platform-name">Twitter</span>
+                        </div>
+                        <span class="platform-value">45.1K</span>
+                    </div>
+                    <div class="platform-item">
+                        <div class="platform-info">
+                            <div class="platform-icon" style="background: #0077B5;">💼</div>
+                            <span class="platform-name">LinkedIn</span>
+                        </div>
+                        <span class="platform-value">32.5K</span>
+                    </div>
+                    <div class="platform-item">
+                        <div class="platform-info">
+                            <div class="platform-icon" style="background: #1877F2;">📘</div>
+                            <span class="platform-name">Facebook</span>
+                        </div>
+                        <span class="platform-value">89.7K</span>
+                    </div>
+                    <div class="platform-item">
+                        <div class="platform-info">
+                            <div class="platform-icon" style="background: #FF0000;">📺</div>
+                            <span class="platform-name">YouTube</span>
+                        </div>
+                        <span class="platform-value">10.3K</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Posts -->
+        <div class="posts-section">
+            <div class="posts-header">
+                <h2 class="chart-title">Top Performing Posts</h2>
+            </div>
+            <div class="posts-grid">
+                <div class="post-item">
+                    <div class="post-content">
+                        <div class="post-title">New Product Launch Announcement 🚀</div>
+                        <div class="post-platform">Instagram • 2 days ago</div>
+                    </div>
+                    <div class="post-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">15.2K</span>
+                            <span class="stat-label">Likes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">342</span>
+                            <span class="stat-label">Comments</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">1.2K</span>
+                            <span class="stat-label">Shares</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-content">
+                        <div class="post-title">Behind the Scenes: Team Meeting 📸</div>
+                        <div class="post-platform">LinkedIn • 4 days ago</div>
+                    </div>
+                    <div class="post-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">8.7K</span>
+                            <span class="stat-label">Likes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">156</span>
+                            <span class="stat-label">Comments</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">423</span>
+                            <span class="stat-label">Shares</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-item">
+                    <div class="post-content">
+                        <div class="post-title">Customer Success Story: Tech Solutions</div>
+                        <div class="post-platform">Twitter • 1 week ago</div>
+                    </div>
+                    <div class="post-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">6.3K</span>
+                            <span class="stat-label">Likes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">89</span>
+                            <span class="stat-label">Comments</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">234</span>
+                            <span class="stat-label">Shares</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Button -->
+    <button class="export-btn">
+        <span>📊</span>
+        <span>Export Report</span>
+    </button>
+
+    <script>
+        // Initialize Chart
+        const ctx = document.getElementById('engagementChart').getContext('2d');
+        const engagementChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Engagement',
+                    data: [12500, 15200, 13800, 18500, 16200, 22300, 19800],
+                    borderColor: '#4f46e5',
+                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Reach',
+                    data: [45000, 52000, 48000, 58000, 53000, 67000, 61000],
+                    borderColor: '#7c3aed',
+                    backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                if (value >= 1000) {
+                                    return (value / 1000) + 'K';
+                                }
+                                return value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Date Filter Functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.parentElement.classList.contains('date-filter')) {
+                    document.querySelectorAll('.date-filter .filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Export Report
+        document.querySelector('.export-btn').addEventListener('click', () => {
+            alert('Generating analytics report...');
+        });
+
+        // Logout function
+        function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                window.location.href = "index.html";
+            }
+        }
+    </script>
+</body>
+</html>

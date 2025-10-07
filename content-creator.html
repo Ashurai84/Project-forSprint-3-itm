@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Creator - Social Setu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3B82F6;
+            --primary-dark: #2563EB;
+            --secondary: #8B5CF6;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --text-light: #9CA3AF;
+            --background: #F9FAFB;
+            --surface: #FFFFFF;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Header Navigation */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        .btn-logout {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:hover {
+            background: var(--error);
+            color: white;
+            border-color: var(--error);
+        }
+
+        /* Main Content */
+        .content-creator {
+            max-width: 1200px;
+            margin: 100px auto 2rem;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+        }
+
+        /* Grid Layout */
+        .creator-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Cards */
+        .creator-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: var(--surface);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-secondary {
+            background: var(--background);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* Results Section */
+        .result-section {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: var(--background);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-section.active {
+            display: block;
+        }
+
+        .result-section h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .hashtag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.75rem 0;
+        }
+
+        .hashtag {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.625rem;
+            border-radius: 14px;
+            font-size: 0.813rem;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .hashtag:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .ideas-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.75rem 0;
+        }
+
+        .ideas-list li {
+            padding: 0.625rem;
+            margin-bottom: 0.5rem;
+            background: var(--surface);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .creator-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-creator {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="header">
+        <nav class="nav">
+            <h2 class="logo">Social Setu</h2>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="content-creator.html" class="nav-link active">Content</a></li>
+                <li><a href="schedule-manager.html" class="nav-link">Schedule</a></li>
+                <li><a href="analytics-insights.html" class="nav-link">Analytics</a></li>
+                <li><a href="trend-analysis.html" class="nav-link">Trends</a></li>
+                <li><a href="support-chat.html" class="nav-link">Support</a></li>
+                <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+                <li><a href="pricing.html" class="nav-link">Pricing</a></li>
+                <li><button class="btn-logout" onclick="if(window.logout) logout()">Logout</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="content-creator">
+        <div class="page-header">
+            <h1>AI Content Creator</h1>
+            <p>Generate engaging captions, hashtags, and content ideas powered by Gemini AI</p>
+        </div>
+
+        <div class="creator-grid">
+            <!-- Caption Generator -->
+            <div class="creator-card">
+                <div class="card-header">
+                    <div class="card-icon">✍️</div>
+                    <h2>Caption Generator</h2>
+                </div>
+
+                <form id="captionForm">
+                    <div class="form-group">
+                        <label>Business Type</label>
+                        <select name="businessType" required>
+                            <option value="">Select Business Type</option>
+                            <option value="restaurant">Restaurant</option>
+                            <option value="retail">Retail Store</option>
+                            <option value="tech startup">Tech Startup</option>
+                            <option value="fitness">Fitness Center</option>
+                            <option value="beauty salon">Beauty Salon</option>
+                            <option value="consulting">Consulting</option>
+                            <option value="e-commerce">E-commerce</option>
+                            <option value="education">Education</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target Audience</label>
+                        <input type="text" name="targetAudience" placeholder="e.g., Young professionals, Students" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Platform</label>
+                        <select name="platform" required>
+                            <option value="">Select Platform</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="Twitter">Twitter</option>
+                            <option value="YouTube">YouTube</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Post Topic</label>
+                        <input type="text" name="postTopic" placeholder="e.g., New product launch" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        ✨ Generate Caption
+                    </button>
+                </form>
+
+                <div class="loading" id="captionLoading">
+                    <div class="spinner"></div>
+                    <p>Generating caption...</p>
+                </div>
+
+                <div class="result-section" id="captionResult">
+                    <h3>Generated Caption</h3>
+                    <div id="captionText"></div>
+                    
+                    <h3>Hashtags</h3>
+                    <div class="hashtag-container" id="captionHashtags"></div>
+
+                    <h3>Content Ideas</h3>
+                    <ul class="ideas-list" id="captionIdeas"></ul>
+
+                    <button class="btn btn-secondary" onclick="copyToClipboard('captionText')">
+                        📋 Copy Caption
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hashtag Generator -->
+            <div class="creator-card">
+                <div class="card-header">
+                    <div class="card-icon">#</div>
+                    <h2>Smart Hashtags</h2>
+                </div>
+
+                <form id="hashtagForm">
+                    <div class="form-group">
+                        <label>Content Description</label>
+                        <textarea name="content" placeholder="Describe your post content..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Platform</label>
+                        <select name="platform" required>
+                            <option value="">Select Platform</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="LinkedIn">LinkedIn</option>
+                            <option value="Twitter">Twitter</option>
+                            <option value="TikTok">TikTok</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Industry</label>
+                        <input type="text" name="industry" placeholder="e.g., Food, Fashion, Technology" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        🔍 Generate Hashtags
+                    </button>
+                </form>
+
+                <div class="loading" id="hashtagLoading">
+                    <div class="spinner"></div>
+                    <p>Analyzing trends...</p>
+                </div>
+
+                <div class="result-section" id="hashtagResult">
+                    <h3>Popular Hashtags</h3>
+                    <div class="hashtag-container" id="popularHashtags"></div>
+
+                    <h3>Niche Hashtags</h3>
+                    <div class="hashtag-container" id="nicheHashtags"></div>
+
+                    <h3>Trending Hashtags</h3>
+                    <div class="hashtag-container" id="trendingHashtags"></div>
+
+                    <button class="btn btn-secondary" onclick="copyHashtags()">
+                        📋 Copy All Hashtags
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Ideas Generator -->
+        <div class="creator-card">
+            <div class="card-header">
+                <div class="card-icon">💡</div>
+                <h2>Content Ideas Generator</h2>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="form-group" style="margin: 0;">
+                    <label>Business Type</label>
+                    <input type="text" id="ideasBusinessType" placeholder="e.g., Restaurant">
+                </div>
+                <div class="form-group" style="margin: 0;">
+                    <label>Industry</label>
+                    <input type="text" id="ideasIndustry" placeholder="e.g., Food">
+                </div>
+                <div class="form-group" style="margin: 0;">
+                    <label>Current Trends (Optional)</label>
+                    <input type="text" id="ideasTrends" placeholder="e.g., AI, Sustainability">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="generateContentIdeas()">
+                🚀 Generate Ideas
+            </button>
+
+            <div class="loading" id="ideasLoading">
+                <div class="spinner"></div>
+                <p>Brainstorming ideas...</p>
+            </div>
+
+            <div class="result-section" id="ideasResult">
+                <h3>Content Ideas</h3>
+                <div id="contentIdeasList"></div>
+            </div>
+        </div>
+    </div>
+
+
+        function logout() {
+        }
+    <script src="js/gemini.js"></script>
+    <script>
+        // Caption Generation
+        document.getElementById('captionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                businessType: formData.get('businessType'),
+                targetAudience: formData.get('targetAudience'),
+                platform: formData.get('platform'),
+                postTopic: formData.get('postTopic')
+            };
+
+            showLoading('captionLoading');
+            hideResult('captionResult');
+
+            try {
+                const result = await geminiAI.generateContent(
+                    data.businessType, 
+                    data.targetAudience, 
+                    data.platform, 
+                    data.postTopic
+                );
+
+                displayCaptionResult(result);
+            } catch (error) {
+                console.error('Error generating caption:', error);
+                alert('Failed to generate caption. Please check your API key and try again.');
+            } finally {
+                hideLoading('captionLoading');
+            }
+        });
+
+        // Hashtag Generation
+        document.getElementById('hashtagForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                content: formData.get('content'),
+                platform: formData.get('platform'),
+                industry: formData.get('industry')
+            };
+
+            showLoading('hashtagLoading');
+            hideResult('hashtagResult');
+
+            try {
+                const result = await geminiAI.suggestHashtags(
+                    data.content,
+                    data.platform,
+                    data.industry
+                );
+
+                displayHashtagResult(result);
+            } catch (error) {
+                console.error('Error generating hashtags:', error);
+                alert('Failed to generate hashtags. Please check your API key and try again.');
+            } finally {
+                hideLoading('hashtagLoading');
+            }
+        });
+
+        // Content Ideas Generation
+        async function generateContentIdeas() {
+            const businessType = document.getElementById('ideasBusinessType').value;
+            const industry = document.getElementById('ideasIndustry').value;
+            const trends = document.getElementById('ideasTrends').value.split(',').map(t => t.trim()).filter(t => t);
+
+            if (!businessType || !industry) {
+                alert('Please fill in business type and industry.');
+                return;
+            }
+
+            showLoading('ideasLoading');
+            hideResult('ideasResult');
+
+            try {
+                const result = await geminiAI.generateContentIdeas(businessType, industry, trends);
+                displayIdeasResult(result);
+            } catch (error) {
+                console.error('Error generating ideas:', error);
+                alert('Failed to generate content ideas. Please check your API key and try again.');
+            } finally {
+                hideLoading('ideasLoading');
+            }
+        }
+
+        // Helper Functions
+        function showLoading(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function hideLoading(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function hideResult(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function showResult(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function displayCaptionResult(result) {
+            document.getElementById('captionText').innerHTML = `<p style="margin: 0.5rem 0; line-height: 1.5;">${result.caption}</p>`;
+            
+            const hashtagsContainer = document.getElementById('captionHashtags');
+            hashtagsContainer.innerHTML = result.hashtags.map(tag => `<span class="hashtag">${tag}</span>`).join('');
+            
+            const ideasContainer = document.getElementById('captionIdeas');
+            ideasContainer.innerHTML = result.ideas.map(idea => `<li>${idea}</li>`).join('');
+            
+            showResult('captionResult');
+        }
+
+        function displayHashtagResult(result) {
+            document.getElementById('popularHashtags').innerHTML = 
+                result.popular.map(tag => `<span class="hashtag">${tag}</span>`).join('');
+            
+            document.getElementById('nicheHashtags').innerHTML = 
+                result.niche.map(tag => `<span class="hashtag">${tag}</span>`).join('');
+            
+            document.getElementById('trendingHashtags').innerHTML = 
+                result.trending.map(tag => `<span class="hashtag">${tag}</span>`).join('');
+            
+            showResult('hashtagResult');
+        }
+
+        function displayIdeasResult(result) {
+            const container = document.getElementById('contentIdeasList');
+            container.innerHTML = result.ideas.map(idea => `
+                <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #E5E7EB;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #3B82F6; font-size: 0.95rem;">${idea.title}</h4>
+                    <p style="margin: 0 0 0.75rem 0; color: #6B7280; font-size: 0.875rem;">${idea.description}</p>
+                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                        <span style="background: #F3F4F6; padding: 0.25rem 0.625rem; border-radius: 14px; font-size: 0.75rem;">${idea.type}</span>
+                        <span style="font-size: 0.75rem; color: #9CA3AF;">${idea.platforms.join(', ')}</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            showResult('ideasResult');
+        }
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Caption copied to clipboard!');
+            });
+        }
+
+        function copyHashtags() {
+            const hashtags = [];
+            document.querySelectorAll('#hashtagResult .hashtag').forEach(tag => {
+                hashtags.push(tag.textContent);
+            });
+            
+            navigator.clipboard.writeText(hashtags.join(' ')).then(() => {
+                alert('Hashtags copied to clipboard!');
+            });
+        }
+
+        function logout() {
+        }
+    </script>
+</body>
+</html>
