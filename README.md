@@ -1,65 +1,133 @@
-# Scheduler — Changes and Integration Notes
+# 🚀 Social Setu — Social Media Content Scheduler
+**_Sprint 3 Comprehensive Project — Semester 3 (ITM Skills University)_**
 
-This repository was updated to remove Supabase references and integrate Firebase + a local Gemini AI client for content generation. Below is a summary of what changed, how to run the project, and brief notes on key files.
+> “Automating content scheduling and analytics for small Indian businesses.”
 
-## Summary of changes
-- Removed Supabase environment variables and replaced with Firebase env vars in `.env`.
-- Added `js/firebase.js` initializer (uses `FIREBASE_*` env vars; exports `app`, `auth`, `db`, `analytics`).
-- Added `firebase` to `package.json` dependencies (run `npm install` to install).
-- Added `js/gemini.js` integration (client-side helper) — note: API key was present in earlier commits; ensure keys are stored server-side for production.
-- Replaced sidebar UI with a consistent top navigation bar across pages (`dashboard.html`, `content-creator.html`, `analytics.html`).
-- Integrated content generation UI in `content-creator.html` to call `geminiAI` methods.
+---
 
-## New / Updated files
-- `.env` — now contains `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_DATABASE_URL`, `FIREBASE_PROJECT_ID`, `FIREBASE_STORAGE_BUCKET`, `FIREBASE_MESSAGING_SENDER_ID`, `FIREBASE_APP_ID`, `FIREBASE_MEASUREMENT_ID`.
-- `js/firebase.js` — Firebase initializer (exports `app`, `auth`, `db`, `analytics`).
-- `js/gemini.js` — Gemini AI client wrapper (content generation, hashtag suggestion, sentiment, etc.).
-- `dashboard.html` & `dashboard.css` — layout updated to remove sidebar and use top nav; `.main-content` now spans full width.
-- `content-creator.html` — updated to use top nav; integrated UI for caption, hashtag, and ideas generation.
-- `analytics.html` — new minimal analytics page linked from the top nav.
-- `README.md` — this file.
+## 🧩 Project Overview
 
-## Security notes
-- Do NOT keep API keys in client-side files. Move any AI or Firebase admin keys to your backend or serverless functions. Rotate keys if they were exposed.
+**Social Setu** is a **Firebase-powered Social Media Content Scheduler** designed specifically for **small businesses and startups in India**.
 
-## How to run locally
-1. Install dependencies:
+The platform helps users:
+- Schedule and manage posts across platforms (Instagram, Facebook, LinkedIn, etc.)
+- Predict best posting times using intelligent algorithms
+- Capture and manage leads in real-time
+- Analyze engagement, CLV, RFM, and NPS metrics
 
-```bash
-npm install
-```
+---
 
-2. Add your Firebase config to `.env` (or keep existing values if provided).
+## 🎯 Problem Statement
 
-3. Start the dev server (this project uses Vite):
+> Small Indian businesses struggle to maintain consistent social media presence due to limited time, cost, and access to smart scheduling tools.
 
-```bash
-npm run dev
-```
+### 💡 Solution:
+Build an **affordable**, **data-driven**, and **AI-assisted** scheduler that:
+- Uses Firebase for real-time data storage
+- Applies Data Structures & Algorithms for intelligent scheduling
+- Provides affordable subscription plans (₹299–₹1,999)
+- Helps users automate, analyze, and grow their digital presence
 
-4. Open `http://localhost:5173` (or the address Vite prints) and navigate the app.
+---
 
-## Next recommended work (optional)
-- Move Gemini API calls to a server-side proxy to avoid exposing API keys.
-- Convert `js/gemini.js` to ESM exports and add defensive parsing and retry/backoff logic.
-- Implement full analytics dashboards that read from Firestore.
-- Add unit tests for parsing helper functions and UI interactions.
+## 🧠 Tech Stack
 
-If you'd like, I can implement the serverless proxy and convert Gemini calls to use it next.
+| Layer | Technology Used |
+|--------|-----------------|
+| Frontend | HTML, CSS, JavaScript |
+| Backend | Firebase Firestore, Firebase Auth, Firebase Analytics |
+| Database | Firestore (NoSQL) |
+| DSA Module | Priority Queue, Binary Search Insert, Histogram Timing, Topological Sort, Hashing |
+| AI Integration | Gemini API (Content Generation, Hashtags, Analysis) |
+| Hosting | Firebase Hosting (planned) |
 
-## Running the Gemini proxy (optional but recommended for AI features)
+---
 
-1. Change to the server folder:
+## 🗃️ Firestore Database Structure
 
-```bash
-cd server
-```
+**Collections Used:**
 
-2. Install proxy dependencies and start the proxy:
+1. `leads`
+   - `name`, `email`, `phone`, `source`, `hashedEmail`, `status`, `createdAt`
 
-```bash
-npm install
-npm start
-```
+2. `posts`
+   - `userId`, `content`, `platforms[]`, `scheduleTime`, `status`, `engagement`, `createdAt`
 
-The proxy will run on port 3000 by default and exposes endpoints at `http://localhost:3000/api/gemini/*`. The front-end `js/gemini.js` is already configured to call `/api/gemini/*` so if you run the proxy alongside the Vite dev server you should be able to use AI features locally. If you have a real provider, set `GEMINI_API_URL` and `GEMINI_API_KEY` in `server/.env`.
+3. `feedback`
+   - `postId`, `sentiment`, `npsRating`, `timestamp`, `derivedScores`
+
+---
+
+## ⚙️ Data Structures & Algorithms Used
+
+| Algorithm | Purpose | Time Complexity | Why Used |
+|------------|----------|-----------------|-----------|
+| **Priority Queue (Min Heap)** | Manage next post to publish | O(log n) | Ensures correct scheduling order |
+| **Binary Search Insert** | Insert posts efficiently | O(n) | Keeps schedule sorted |
+| **Histogram Timing Algorithm** | Find best posting times | O(n) | Data-driven insights for Indian users |
+| **Topological Sort** | Order dependent tasks | O(V + E) | Approval and workflow control |
+| **Conflict Detection** | Avoid overlapping posts | O(n log n) | Ensures brand consistency |
+| **Hashing** | Prevent duplicate leads | O(1) | Saves space, improves CAC efficiency |
+
+---
+
+## 💼 Business Model
+
+| Plan | Price | Target | Key Features |
+|------|--------|---------|---------------|
+| **Starter** | ₹299/month | Individuals | 10 posts, 3 accounts, analytics dashboard |
+| **Professional** | ₹799/month | Small Teams | 50 posts, AI timing, approvals, 10 accounts |
+| **Business** | ₹1,999/month | Agencies | Unlimited posts, reporting, custom branding |
+
+**Why it fits India:**
+- Localized timings (IST)
+- Affordable vs global competitors (Buffer, Hootsuite)
+- Accepts UPI, wallets, and net banking
+
+---
+
+## 📊 Analytics Metrics
+
+| Metric | Description |
+|---------|-------------|
+| **CLV (Customer Lifetime Value)** | Tracks average revenue per customer |
+| **RFM Analysis** | Recency, Frequency, Monetary segmentation |
+| **NPS (Net Promoter Score)** | Tracks user satisfaction and loyalty |
+| **Engagement Score** | (likes × 1) + (comments × 3) + (shares × 5) + (clicks × 2) |
+
+---
+
+
+
+## ✨ Future Enhancements
+
+Cloud Scheduler integration for auto-posting
+
+### Team collaboration dashboards
+
+Multi-language (Hindi + English) content AI
+
+Payment integration with Razorpay/Stripe
+
+Mobile app (React Native)
+
+🧑‍💻 Author
+
+👤 Ashutosh Pankaj Rai
+🎓 ITM Skills University – Semester 3
+📘 Project: Social Setu (Social Media Content Scheduler)
+📧 Raia40094@gmail.com.com
+
+ 
+
+📜 License
+
+This project is developed as part of academic coursework and may be extended under an open-source license in future versions.
+
+⭐ If you liked this project or want to collaborate, feel free to fork and improve it!
+
+
+---
+
+Would you like me to now make a **second version** of this `README.md` (simplified + more visual) — the one you’ll actually show **during viva on GitHub**?  
+It will include emojis, badges, and short punchlines (while this one is the official detailed version).
