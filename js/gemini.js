@@ -3,7 +3,7 @@ class GeminiAI {
     constructor() {
         // NOTE: This key is expected to be provided by you. It was present in earlier versions.
         // If you plan to deploy, move this to a server-side proxy for security.
-        this.apiKey = 'AIzaSyDISrDnnU3AY0lph_vodpVtgSFNnWFPDQg';
+        this.apiKey = ' gemini-api-key';
         // Using the correct model name for v1beta API
         this.model = 'gemini-2.0-flash';
         this.baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
